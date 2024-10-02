@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #fff;
+    color: #000;
+}
+
+h1 {
+    text-align: center;
+}
+
+button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 2px solid #000;
+    background-color: #fff;
+    color: #000;
+}
+
+button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+pre {
+    background-color: #f8f8f8;
+    border: 1px solid #000;
+    padding: 15px;
+    margin: 20px auto;
+    max-height: 70vh;
+    overflow-y: auto;
+    width: 90%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+#statusMessageOpen {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+    color: green;
+}
+
+#statusMessageClosed {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+    color: red;
+}
