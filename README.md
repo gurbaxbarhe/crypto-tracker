@@ -1,7 +1,7 @@
 # crypto_tracker
 A cryptocurrency tracking application that provides updates on prices, popularity, and news
 
-Documentation
+<h1 align="left">Documentation</h1>
 Link to API: [https://docs.coingecko.com/reference/coins-markets]
 
 Activate VM
