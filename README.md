@@ -1,8 +1,10 @@
 # crypto_tracker
 A cryptocurrency tracking application that provides updates on prices, popularity, and news
 
-<h1 align="left">Documentation</h1>
+<h3 align="left">Documentation</h3>
 Link to API: [https://docs.coingecko.com/reference/coins-markets]
+
+&nbsp;
 
 Activate VM
 ```bash
@@ -21,7 +23,7 @@ Run app
 cd backend/src/
 fastapi dev app.py
 ```
-Link to application, upon hosting: [http://127.0.0.1:8000/]
+
 
 Reload app
 ```bash
