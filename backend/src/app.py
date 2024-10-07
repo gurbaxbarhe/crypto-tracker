@@ -64,7 +64,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 vs_currency = message.get("vs_currency", "cad")
                 print("Subscription made, now fetching new data...")
                 # Fetch and send data
-                await send_fresh_data(vs_currency="cad")
+                await send_fresh_data(vs_currency)
 
     except WebSocketDisconnect:
         print("Client disconnected")

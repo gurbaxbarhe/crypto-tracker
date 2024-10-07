@@ -31,6 +31,21 @@ function initializeWebSocket() {
         ws.close(); // Close the connection if an error occurs
     };
 }
+let currency = "cad";  
+
+// Function to toggle between CAD and USD
+function toggleCurrency() {
+    const toggle = document.getElementById('usdToggle');
+    const label = document.getElementById('currencyLabel');
+    if (toggle.checked) {
+        currency = "usd";  
+        label.textContent = "USD";
+    } else {
+        currency = "cad";  
+        label.textContent = "CAD";
+    }
+    subscribe();  // Fetch the data again with the new currency
+}
 
 function subscribe() {
     if (ws.readyState === WebSocket.OPEN) {

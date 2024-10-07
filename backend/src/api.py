@@ -68,6 +68,7 @@ def fetch_crypto_data(vs_currency="cad"):  # Default to CAD for currency
 
     while True:
         params["page"] = page
+        data = []  # Initializing data as empty list
         try:
             response = requests.get(url, headers=headers, params=params)
             response.raise_for_status()
@@ -147,7 +148,7 @@ def get_assets(vs_currency="cad"):
                 )  # If it's still a pain, give random value for simulation
 
             if vs_currency == "usd":
-                previous_weeek_close *= conversion_rate  # Conversion to USD
+                previous_week_close *= conversion_rate  # Conversion to USD
 
             # Get spot price from initial_prices_cad and ensure it ±50% of previous_week_close
             spot_price = round(previous_week_close * random.uniform(0.5, 1.5), 2)

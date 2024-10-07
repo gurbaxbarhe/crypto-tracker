@@ -11,7 +11,14 @@
     <div id="statusMessageOpen">Waiting for connection...</div>
     <div id="lastUpdatedTime"> </div>
     <button id="subscribebtn" disabled onclick="subscribe()">Subscribe</button>
+    <label class="switch">
+        <input type="checkbox" id="usdToggle" onclick="toggleCurrency()">
+        <span class="slider round"></span>
+    </label>
+    <span id="currencyLabel">CAD</span>
     <pre id="messages"></pre>
+    
     <script src="/frontend/app.js"></script>
 </body>
+
 </html>
