@@ -35,13 +35,17 @@ app.mount("/frontend", StaticFiles(directory=str(frontend_path)), name="frontend
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
 
-    async def send_fresh_data():
+    async def send_fresh_data(vs_currency="cad"):
         """
         Fetches the latest asset data from api.py and sends to client
         """
         try:
-            fresh_data = get_assets()
-            response_data = {"channel": "rates", "event": "data", "data": fresh_data}
+            fresh_data = get_assets(vs_currency)
+            response_data = {
+                "channel": "rates",
+                "event": "data",
+                "data": fresh_data,
+            }
             await websocket.send_text(json.dumps(response_data, indent=4))
         except Exception as e:
             print(f"Error fetching data: {e}")
@@ -57,9 +61,10 @@ async def websocket_endpoint(websocket: WebSocket):
                 message.get("event") == "subscribe"
                 and message.get("channel") == "rates"
             ):
+                vs_currency = message.get("vs_currency", "cad")
                 print("Subscription made, now fetching new data...")
                 # Fetch and send data
-                await send_fresh_data()
+                await send_fresh_data(vs_currency="cad")
 
     except WebSocketDisconnect:
         print("Client disconnected")
