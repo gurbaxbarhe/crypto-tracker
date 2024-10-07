@@ -28,20 +28,31 @@ from dicts.assets import ASSETS
 from dicts.symbol_id_dict import SYMBOL_ID_DICT
 from dicts.symbol_price_dict import symbol_price_dict  # For symbol : initial_price_CAD
 from dotenv import load_dotenv
+from forex_python.converter import (  # For conversion to USD
+    CurrencyRates,
+    RatesNotAvailableError,
+)
 
 # Load environment variables from .env file
 load_dotenv()
 
+# Instantiate CurrencyRates object
+usd_conversion = CurrencyRates()
+try:
+    conversion_rate = usd_conversion.get_rate("CAD", "USD")
+except (RatesNotAvailableError, Exception) as e:
+    conversion_rate = 1.3
+
 
 # Function to fetch data from the API
-def fetch_crypto_data():
+def fetch_crypto_data(vs_currency="cad"):  # Default to CAD for currency
     all_assets = []  # List to store assets
     # URL for CoinGecko API
     url = "https://api.coingecko.com/api/v3/coins/markets"
 
     # Parameters for the API
     params = {
-        "vs_currency": "cad",  # Default to CAD
+        "vs_currency": vs_currency,  # Default to CAD
         "per_page": 250,  # Fetch 250 results per page, as per CoinGecko documentation
         "ids": ",".join(
             SYMBOL_ID_DICT.values()
@@ -61,7 +72,7 @@ def fetch_crypto_data():
             response = requests.get(url, headers=headers, params=params)
             response.raise_for_status()
             data = response.json()
-        except requests.RequestExceptions as e:
+        except requests.RequestException as e:
             print(f"Failed due to: {e}")
 
         all_assets.extend(data)
@@ -75,8 +86,8 @@ def fetch_crypto_data():
 
 
 # Process and format asset data
-def get_assets():
-    data = fetch_crypto_data()  # Fetch new data
+def get_assets(vs_currency="cad"):
+    data = fetch_crypto_data(vs_currency)  # Fetch new data
 
     # Change "symbol" to uppercase for matching
     for asset in data:
@@ -134,6 +145,9 @@ def get_assets():
                 previous_week_close = random.randint(
                     0.1, 10
                 )  # If it's still a pain, give random value for simulation
+
+            if vs_currency == "usd":
+                previous_weeek_close *= conversion_rate  # Conversion to USD
 
             # Get spot price from initial_prices_cad and ensure it ±50% of previous_week_close
             spot_price = round(previous_week_close * random.uniform(0.5, 1.5), 2)
