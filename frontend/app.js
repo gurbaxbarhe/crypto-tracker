@@ -16,13 +16,13 @@ function initializeWebSocket() {
 
     ws.onmessage = function(event) {
         const parsedData = JSON.parse(event.data);
-        messages.textContent = JSON.stringify(parsedData, null, 4); // Making JSON prettier on UI
+        messages.textContent = JSON.stringify(parsedData, null, 4);  // Make the data in JSON format look pretty
     };
 
     ws.onclose = function() {
         console.log("Connection closed");
         statusMessage.textContent = "Connection closed";
-        statusMessage.id = "statusMessageClosed";  // Change to red
+        statusMessage.id = "statusMessageClosed";  // Change button to red
         subscribebtn.disabled = true; // Disable the button if the connection is closed
     };
 
@@ -40,10 +40,15 @@ function subscribe() {
         };
         console.log("Subscription message:", subscriptionMessage);  // Log the subscription message to check received
         ws.send(JSON.stringify(subscriptionMessage));
+
+        // Update last updated time when button is clicked such that users knows latest time of data fetch
+        const lastUpdatedElement = document.getElementById("lastUpdatedTime");
+        const currentTime = new Date().toLocaleString();  // Get current time
+        lastUpdatedElement.textContent = `Latest data fetch: ${currentTime}`;
     } else {
         console.log("Connection is not open, please refresh");
     }
 }
 
 // Initialize WebSocket on page load
-initializeWebSocket();
+initializeWebSocket(); 
