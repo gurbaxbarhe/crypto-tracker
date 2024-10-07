@@ -25,39 +25,44 @@ from datetime import datetime, timedelta
 
 import requests
 from dicts.assets import ASSETS
-from dicts.symbol_id_dict import symbol_id_dict
+from dicts.symbol_id_dict import SYMBOL_ID_DICT
 from dicts.symbol_price_dict import symbol_price_dict  # For symbol : initial_price_CAD
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
 
-# URL for CoinGecko API
-url = "https://api.coingecko.com/api/v3/coins/markets"
-
-# Parameters for the API
-params = {
-    "vs_currency": "cad",  # Default to CAD
-    "per_page": 250,  # Fetch 250 results per page, as per CoinGecko documentation
-    "ids": ",".join(
-        symbol_id_dict.values()
-    ),  # Convert dict values to comma-separated string of coin IDs
-    "page": 1,  # Begin at page 1
-}
-
-# Headers for the API key
-headers = {"accept": "application/json", "x-cg-api-key": os.getenv("CoinGecko_API_Key")}
-
 
 # Function to fetch data from the API
 def fetch_crypto_data():
     all_assets = []  # List to store assets
+    # URL for CoinGecko API
+    url = "https://api.coingecko.com/api/v3/coins/markets"
+
+    # Parameters for the API
+    params = {
+        "vs_currency": "cad",  # Default to CAD
+        "per_page": 250,  # Fetch 250 results per page, as per CoinGecko documentation
+        "ids": ",".join(
+            SYMBOL_ID_DICT.values()
+        ),  # Convert dict values to comma-separated string of coin IDs
+        "page": 1,  # Begin at page 1
+    }
+    # Headers for the API key
+    headers = {
+        "accept": "application/json",
+        "x-cg-api-key": os.getenv("CoinGecko_API_Key"),
+    }
     page = 1
 
     while True:
         params["page"] = page
-        response = requests.get(url, headers=headers, params=params)
-        data = response.json()
+        try:
+            response = requests.get(url, headers=headers, params=params)
+            response.raise_for_status()
+            data = response.json()
+        except requests.RequestExceptions as e:
+            print(f"Failed due to: {e}")
 
         all_assets.extend(data)
 
@@ -121,7 +126,14 @@ def get_assets():
         for missing_asset in missing_assets:
             # Set previous week close to values that is stored in symbol_price_dict
             previous_week_close = symbol_price_dict.get(missing_asset)
-            previous_week_close = float(previous_week_close)  # Must be float logic
+            if previous_week_close is None:
+                continue  # Skip that specific coin
+            try:
+                previous_week_close = float(previous_week_close)  # Must be float logic
+            except ValueError:
+                previous_week_close = random.randint(
+                    0.1, 10
+                )  # If it's still a pain, give random value for simulation
 
             # Get spot price from initial_prices_cad and ensure it ±50% of previous_week_close
             spot_price = round(previous_week_close * random.uniform(0.5, 1.5), 2)
@@ -235,4 +247,4 @@ def get_assets():
 
 # Process formatting and data manipulation
 get_assets_list = get_assets()
-# print(f"Asset information is: {get_assets_list}")
+print(f"Asset information is: {get_assets_list}")
