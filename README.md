@@ -1,4 +1,4 @@
-# crypto_tracker
+# Crypto Tracker
 A cryptocurrency tracking application that provides updates on prices, popularity, and news
 
 <h3 align="left">Documentation</h3>
